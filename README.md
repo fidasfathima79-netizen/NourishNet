@@ -1,83 +1,69 @@
 # NourishNet – Food Donation & Distribution Management System
 
-**Connecting surplus food with people in need.**
+**NourishNet** is a Django-based web application that connects food donors with NGOs to reduce food waste and improve food distribution. It allows donors to share surplus food and enables NGOs to reserve and collect available donations.
 
-NourishNet is a Django-based web application that connects food donors with NGOs and food banks. It helps ensure surplus food reaches people in need instead of going to waste.
+🌐 **Live Demo:** https://fidasfathima12.pythonanywhere.com/  
+💻 **GitHub Repository:** https://github.com/fidasfathima79-netizen/NourishNet
 
-## Live Demo
+---
 
-- **Live Website:** https://fidasfathima12.pythonanywhere.com/
-- **GitHub Repository:** https://github.com/fidasfathima79-netizen/NourishNet
+## Key Features
 
-## Demo Login Credentials
-
-Use the following credentials to explore the application:
-
-| Role | Username | Password |
-|---|---|---|
-| Administrator | `admin` | `sana@5911` |
-| Donor | `donor@123` | `sana@1234#` |
-| NGO | `ngo@123` | `sana@123#` |
-
-**Note:** These are demonstration accounts intended for project evaluation. Do not use these passwords for personal accounts or real-world services.
-
-## Screenshots
-
-### Homepage
-![NourishNet Homepage](screenshots/homepage.png)
-
-### Authentication
-
-| Login | Registration |
-|---|---|
-| ![Login](screenshots/login.png) | ![Registration](screenshots/registration.png) |
-
-### Dashboards
-
-| Admin Dashboard | Donor Dashboard |
-|---|---|
-| ![Admin Dashboard](screenshots/admin-dashboard.png) | ![Donor Dashboard](screenshots/donor-dashboard.png) |
-
-### NGO Dashboard
-![NGO Dashboard](screenshots/ngo-dashboard.png)
-
-### Donation and Reservation Management
-
-| Available Donations | Reservations |
-|---|---|
-| ![Donation List](screenshots/donation-list.png) | ![Reservations](screenshots/reservation.png) |
-
-## Features
-
-| Requirement | Implementation |
-|---|---|
-| User Authentication | Registration, login and logout using a custom Django User model |
-| Role-Based Access Control | Admin, Donor and NGO roles |
-| CRUD Operations | Create, view, edit and delete donor-owned donations |
-| Database Management | SQLite, Django migrations and foreign-key relationships |
-| Dashboards | Separate Admin, Donor and NGO dashboards with statistics |
-| Responsive UI | HTML, CSS, Bootstrap 5 and media queries |
-| Django Admin | User, Donation and Reservation management |
-| Search and Filtering | Search by food, location and donor, with food-type filtering |
-| File Uploads | Food photographs uploaded with donations |
-| REST-Style API | JSON endpoint: `GET /api/donations/?q=&food_type=` |
+- User registration, login and logout
+- Role-based access control
+- Separate dashboards for Admin, Donor and NGO
+- Food donation management
+- Donation reservation by NGOs
+- Donation collection status management
+- Search and filter available donations
+- Admin user management
+- Admin donation and reservation monitoring
+- Food donation image uploads
+- Responsive user interface
 
 ## User Roles
 
 | Role | Permissions |
 |---|---|
-| **Admin** | Manage users, donations and reservations; access the admin dashboard and Django admin |
-| **Donor** | Create, edit and delete own donations; view reservations and mark pickups as collected |
-| **NGO** | Browse and search available donations, reserve food and track reservations |
+| Admin | Manage users, monitor donations and reservations, access admin dashboard |
+| Donor | Create, view and manage own donations; view reservations |
+| NGO | Browse available donations, search and filter, reserve donations and view reservations |
 
-All protected pages require authentication. Administrative pages are restricted by role.
+## Screenshots
 
-## Technology Stack
+### Login and Registration
+
+![Login Demo](screenshots/login-demo.png)
+
+![Login Empty](screenshots/login-empty.png)
+
+![Registration](screenshots/registration.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
+### Donor Dashboard
+
+![Donor Dashboard](screenshots/donor-dashboard.png)
+
+### NGO Dashboard
+
+![NGO Dashboard](screenshots/ngo-dashboard.png)
+
+### Donation List and Reservation
+
+![Donation List](screenshots/donation-list.png)
+
+![Reservation](screenshots/reservation.png)
+
+## Technologies Used
 
 - **Backend:** Python, Django
-- **Frontend:** HTML, CSS, Bootstrap 5, JavaScript
+- **Frontend:** HTML, CSS, Bootstrap
 - **Database:** SQLite
 - **Image Handling:** Pillow
+- **Static Files:** WhiteNoise
 - **Deployment:** PythonAnywhere
 - **Version Control:** Git and GitHub
 
@@ -85,25 +71,42 @@ All protected pages require authentication. Administrative pages are restricted 
 
 ```text
 NourishNet/
+│
+├── config/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── core/
+│   ├── migrations/
+│   ├── management/
+│   ├── models.py
+│   ├── views.py
+│   ├── forms.py
+│   ├── urls.py
+│   ├── admin.py
+│   └── tests.py
+│
+├── screenshots/
+│   ├── admin-dashboard.png
+│   ├── donation-list.png
+│   ├── donor-dashboard.png
+│   ├── login-demo.png
+│   ├── login-empty.png
+│   ├── ngo-dashboard.png
+│   ├── registration.png
+│   └── reservation.png
+│
+├── static/
+├── templates/
 ├── manage.py
 ├── requirements.txt
-├── config/
-├── core/
-│   └── management/
-│       └── commands/
-│           └── seed_demo.py
-├── templates/
-│   ├── accounts/
-│   ├── admin/
-│   ├── donor/
-│   ├── ngo/
-│   └── donations/
-├── static/
-├── media/
-└── screenshots/
+├── build.sh
+├── .gitignore
+└── README.md
 ```
 
-## Local Installation and Setup
+## Installation and Setup
 
 ### 1. Clone the repository
 
@@ -114,19 +117,17 @@ cd NourishNet
 
 ### 2. Create a virtual environment
 
+**Windows:**
+
 ```bash
 python -m venv venv
-```
-
-Activate it:
-
-**Windows**
-```bash
 venv\Scripts\activate
 ```
 
-**Linux / macOS**
+**Linux / Ubuntu:**
+
 ```bash
+python3 -m venv venv
 source venv/bin/activate
 ```
 
@@ -136,65 +137,81 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Apply migrations
+### 4. Apply database migrations
 
 ```bash
+python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 5. Create demo accounts (optional)
+### 5. Create demo accounts
 
 ```bash
 python manage.py seed_demo
 ```
 
-### 6. Start the development server
+### 6. Run the development server
 
 ```bash
 python manage.py runserver
 ```
 
-Open: http://127.0.0.1:8000/
+Open the application at:
 
-## Useful Django Commands
+```text
+http://127.0.0.1:8000/
+```
+
+## Demo Login Credentials
+
+The following credentials are for the demo accounts created by the local `seed_demo` command.
+
+| Role | Username | Password |
+|---|---|---|
+| Admin | admin | Admin@12345 |
+| Donor | demo_donor | Donor@12345 |
+| NGO | demo_ngo | Ngo@12345 |
+
+**Note:** These are local seeded-demo credentials. The live website may use different account credentials. Do not use real or reused passwords for public demo accounts.
+
+## Testing
+
+Run the Django test suite using:
 
 ```bash
-python manage.py runserver
-python manage.py migrate
-python manage.py seed_demo
 python manage.py test
-python manage.py createsuperuser
-python manage.py collectstatic
+```
+
+Check the project configuration using:
+
+```bash
+python manage.py check
 ```
 
 ## Deployment
 
-NourishNet is deployed using **PythonAnywhere**.
+The application is deployed using PythonAnywhere.
 
-Deployment includes:
+**Live Application:** https://fidasfathima12.pythonanywhere.com/
 
-1. Cloning the GitHub repository.
-2. Creating a Python virtual environment.
-3. Installing project dependencies.
-4. Configuring the Django WSGI application.
-5. Setting production environment variables.
-6. Applying database migrations.
-7. Collecting static files.
-8. Reloading the web application.
+## Future Enhancements
 
-## Future Improvements
+- Email and SMS notifications
+- Advanced donation analytics
+- Interactive dashboard charts
+- Location-based donation discovery
+- Food expiry reminders
+- Improved reporting features
 
-- Email notifications for donation reservations.
-- Location-based donation discovery.
-- Food expiry alerts.
-- Improved analytics and impact reports.
-- Integration with maps for food collection locations.
+## Author
 
-## Project Links
+**Developed as an academic final project**
 
-- **GitHub:** https://github.com/fidasfathima79-netizen/NourishNet
-- **Live Application:** https://fidasfathima12.pythonanywhere.com/
+**Project:** NourishNet – Food Donation & Distribution Management System  
+**Framework:** Django  
+**Repository:** [GitHub – NourishNet](https://github.com/fidasfathima79-netizen/NourishNet)  
+**Live Demo:** [NourishNet](https://fidasfathima12.pythonanywhere.com/)
 
 ---
 
-**NourishNet – Share More, Waste Less.**
+*Reducing food waste. Connecting communities. Nourishing lives.*
