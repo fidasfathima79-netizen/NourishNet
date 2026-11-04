@@ -147,13 +147,17 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 5. Create demo accounts
+### 5. Create an Admin Account
+
+Create the administrator account using Django's built-in command:
 
 ```bash
-python manage.py seed_demo
+python manage.py createsuperuser
 ```
 
-### 6. Run the development server
+Enter the required username, email address and password when prompted.
+
+### 6. Run the Development Server
 
 ```bash
 python manage.py runserver
@@ -165,6 +169,15 @@ Open the application at:
 http://127.0.0.1:8000/
 ```
 
+### 7. Create Donor and NGO Accounts
+
+Donor and NGO accounts can be created directly through the website registration page.
+
+1. Open the application.
+2. Click **Join NourishNet**.
+3. Register as a Donor or NGO.
+4. Log in using the registered credentials.
+
 ## Demo Login Credentials
 
 The following credentials are for the demo accounts created by the local `seed_demo` command.
@@ -175,7 +188,14 @@ The following credentials are for the demo accounts created by the local `seed_d
 | Donor | donor@123 | sana@1234# |
 | NGO | ngo@123 | sana@123# |
 
-**Note:** These are local seeded-demo credentials. The live website may use different account credentials. Do not use real or reused passwords for public demo accounts.
+Account Creation:
+
+Admin: Created using Django's createsuperuser command.
+
+Donor: Registered through the website registration page.
+
+NGO: Registered through the website registration page.
+
 
 ## Testing
 
