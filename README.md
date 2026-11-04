@@ -1,4 +1,4 @@
-# NourishNet – Smart Food Donation & Distribution Management System
+# NourishNet –  Food Donation & Distribution Management System
 
 A Django web application that connects **food donors** with **NGOs / food banks** so surplus food reaches people in need instead of going to waste. Donors list surplus food (quantity, type, location, use-by time); NGOs search and reserve it; administrators oversee everything from a central dashboard.
 
