@@ -30,6 +30,9 @@
 | NGO | Browse available donations, search and filter, reserve donations and view reservations |
 
 ## Screenshots
+### Homepage
+
+![NourishNet Homepage](screenshots/homepage.png)
 
 ### Login and Registration
 
