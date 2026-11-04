@@ -4,12 +4,22 @@
 
 NourishNet is a Django-based web application that connects food donors with NGOs and food banks. It helps ensure surplus food reaches people in need instead of going to waste.
 
-Donors can list surplus food with details such as quantity, food type, location and use-by time. NGOs can discover and reserve available donations, while administrators manage users, donations and reservations through a central dashboard.
-
 ## Live Demo
 
 - **Live Website:** https://fidasfathima12.pythonanywhere.com/
 - **GitHub Repository:** https://github.com/fidasfathima79-netizen/NourishNet
+
+## Demo Login Credentials
+
+Use the following credentials to explore the application:
+
+| Role | Username | Password |
+|---|---|---|
+| Administrator | `admin` | `sana@5911` |
+| Donor | `donor@123` | `sana@1234#` |
+| NGO | `ngo@123` | `sana@123#` |
+
+**Note:** These are demonstration accounts intended for project evaluation. Do not use these passwords for personal accounts or real-world services.
 
 ## Screenshots
 
@@ -17,11 +27,13 @@ Donors can list surplus food with details such as quantity, food type, location 
 ![NourishNet Homepage](screenshots/homepage.png)
 
 ### Authentication
+
 | Login | Registration |
 |---|---|
 | ![Login](screenshots/login.png) | ![Registration](screenshots/registration.png) |
 
 ### Dashboards
+
 | Admin Dashboard | Donor Dashboard |
 |---|---|
 | ![Admin Dashboard](screenshots/admin-dashboard.png) | ![Donor Dashboard](screenshots/donor-dashboard.png) |
@@ -30,6 +42,7 @@ Donors can list surplus food with details such as quantity, food type, location 
 ![NGO Dashboard](screenshots/ngo-dashboard.png)
 
 ### Donation and Reservation Management
+
 | Available Donations | Reservations |
 |---|---|
 | ![Donation List](screenshots/donation-list.png) | ![Reservations](screenshots/reservation.png) |
