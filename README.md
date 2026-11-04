@@ -168,9 +168,9 @@ The following credentials are for the demo accounts created by the local `seed_d
 
 | Role | Username | Password |
 |---|---|---|
-| Admin | admin | Admin@12345 |
-| Donor | demo_donor | Donor@12345 |
-| NGO | demo_ngo | Ngo@12345 |
+| Admin | admin | sana@5911 |
+| Donor | donor@123 | sana@1234# |
+| NGO | ngo@123 | sana@123# |
 
 **Note:** These are local seeded-demo credentials. The live website may use different account credentials. Do not use real or reused passwords for public demo accounts.
 
