@@ -1,0 +1,101 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | NourishNet</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-container">
+
+    <div class="auth-left">
+
+        <a href="{% url 'home' %}" class="brand">
+            <img src="{% static 'images/nourishnet-logo.png' %}" alt="Logo">
+            <span>Nourish<span class="green">Net</span></span>
+        </a>
+
+        <div class="auth-message">
+            <h1>Welcome back!</h1>
+            <p>
+                Together, let's make food sharing meaningful.
+                Log in to continue your NourishNet journey.
+            </p>
+        </div>
+
+        <div class="auth-decoration">
+            Connecting Food. Sharing Hope.
+        </div>
+
+    </div>
+
+    <div class="auth-right">
+
+        <div class="auth-form">
+
+            <h2>Sign in to your account</h2>
+
+            <p class="auth-subtitle">
+                Enter your details to access NourishNet.
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label>Username</label>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter your username"
+                    required
+                >
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button type="submit" class="auth-submit">
+                    Login to NourishNet →
+                </button>
+
+            </form>
+
+            <p class="auth-bottom">
+                Don't have an account?
+                <a href="{% url 'register' %}">Create an account</a>
+            </p>
+
+            <a href="{% url 'home' %}" class="back-home">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

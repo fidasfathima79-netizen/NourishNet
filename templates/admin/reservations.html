@@ -1,0 +1,425 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Reservations | NourishNet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f8f5;
+            color: #294438;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            background: #18543e;
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 70px;
+        }
+
+        .brand img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 17px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #287b59;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #65917d;
+            border-radius: 10px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+        }
+
+        .main {
+            margin-left: 280px;
+            padding: 40px;
+        }
+
+        .back {
+            display: inline-block;
+            color: #23764e;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+        }
+
+        .header p {
+            color: #71877c;
+            margin-top: 9px;
+        }
+
+        .profile {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 16px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card,
+        .section {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(30,70,50,0.04);
+        }
+
+        .stat-card {
+            padding: 25px;
+        }
+
+        .stat-card p {
+            color: #71877c;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h2 {
+            color: #218052;
+            font-size: 32px;
+        }
+
+        .section {
+            padding: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 22px;
+            font-size: 25px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 13px 16px;
+            border: 1px solid #dce8e0;
+            border-radius: 10px;
+            font-size: 15px;
+            background: #fbfdfb;
+        }
+
+        .filters input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filters button {
+            padding: 13px 22px;
+            background: #23764e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .reset {
+            padding: 13px 18px;
+            background: #edf5ef;
+            color: #23764e;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 17px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf1ee;
+        }
+
+        th {
+            color: #71877c;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .confirmed {
+            background: #e3f5e9;
+            color: #19764c;
+        }
+
+        .collected {
+            background: #e7effc;
+            color: #315d9c;
+        }
+
+        .cancelled {
+            background: #fdeaea;
+            color: #c0392b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #71877c;
+        }
+
+        @media(max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 900px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+                padding: 25px;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .sidebar {
+                width: 75px;
+                padding: 15px 8px;
+            }
+
+            .brand {
+                font-size: 0;
+                margin-bottom: 35px;
+            }
+
+            .brand img {
+                width: 45px;
+                height: 45px;
+            }
+
+            .nav a {
+                font-size: 0;
+                text-align: center;
+                padding: 15px 5px;
+            }
+
+            .main {
+                margin-left: 75px;
+                padding: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="brand">
+        <img src="{% static 'images/nourishnet-logo.png' %}" alt="NourishNet">
+        NourishNet
+    </div>
+
+    <nav class="nav">
+        <a href="{% url 'admin_dashboard' %}">🏠 Dashboard</a>
+        <a href="{% url 'admin_users' %}">👥 Manage Users</a>
+        <a href="{% url 'admin_donations' %}">🍱 Manage Donations</a>
+        <a href="{% url 'admin_reservations' %}" class="active">📋 Manage Reservations</a>
+    </nav>
+
+    <form method="POST" action="{% url 'logout' %}" class="logout">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</aside>
+
+<main class="main">
+
+    <a href="{% url 'admin_dashboard' %}" class="back">
+        ← Back to Dashboard
+    </a>
+
+    <header class="header">
+        <div>
+            <h1>Manage Reservations</h1>
+            <p>View and monitor all food reservations on NourishNet.</p>
+        </div>
+
+        <div class="profile">
+            👤 {{ request.user.username }}
+        </div>
+    </header>
+
+    <div class="stats">
+        <div class="stat-card">
+            <p>Total Reservations</p>
+            <h2>{{ total_reservations }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Confirmed</p>
+            <h2>{{ confirmed_reservations }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Collected</p>
+            <h2>{{ collected_reservations }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Cancelled</p>
+            <h2>{{ cancelled_reservations }}</h2>
+        </div>
+    </div>
+
+    <section class="section">
+        <h2>All Reservations</h2>
+
+        <form method="GET" class="filters">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search food, NGO or donor..."
+                value="{{ search }}"
+            >
+
+            <select name="status">
+                <option value="">All Statuses</option>
+                <option value="CONFIRMED" {% if selected_status == 'CONFIRMED' %}selected{% endif %}>Confirmed</option>
+                <option value="COLLECTED" {% if selected_status == 'COLLECTED' %}selected{% endif %}>Collected</option>
+                <option value="CANCELLED" {% if selected_status == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
+            </select>
+
+            <button type="submit">Search / Filter</button>
+
+            <a href="{% url 'admin_reservations' %}" class="reset">Reset</a>
+        </form>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food Donation</th>
+                        <th>Donor</th>
+                        <th>NGO</th>
+                        <th>Reserved At</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td><strong>{{ reservation.donation.title }}</strong></td>
+                        <td>{{ reservation.donation.donor.username }}</td>
+                        <td>{{ reservation.ngo.username }}</td>
+                        <td>{{ reservation.reserved_at|date:"d M Y, h:i A" }}</td>
+                        <td>
+                            <span class="status {% if reservation.status == 'CONFIRMED' %}confirmed{% elif reservation.status == 'COLLECTED' %}collected{% else %}cancelled{% endif %}">
+                                {{ reservation.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty">
+                            No reservations found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

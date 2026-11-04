@@ -1,0 +1,626 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users | NourishNet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f8f5;
+            color: #294438;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 86px;
+            background: #18543f;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .logout {
+            margin-top: auto;
+            color: white;
+            text-decoration: none;
+            border: 1px solid #54836f;
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .back {
+            color: #218052;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #71877c;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .profile {
+            display: inline-block;
+            background: white;
+            padding: 18px 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 22px;
+        }
+
+        .stat-card p {
+            color: #71877c;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h2 {
+            color: #218052;
+            font-size: 34px;
+        }
+
+        .users-panel {
+            background: white;
+            padding: 28px;
+            border-radius: 24px;
+        }
+
+        .users-panel h2 {
+            margin-bottom: 22px;
+        }
+
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        input, select {
+            padding: 14px;
+            border: 1px solid #dce9e1;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #fbfdfb;
+        }
+
+        input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        button {
+            background: #218052;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .reset {
+            background: #edf5ef;
+            color: #218052;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px 12px;
+            border-bottom: 1px solid #edf1ed;
+            overflow-wrap: anywhere;
+        }
+
+        th {
+            color: #71877c;
+        }
+
+        .role, .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #e3f4e9;
+            color: #218052;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .inactive {
+            background: #fce8e8;
+            color: #b54747;
+        }
+
+        .action-form {
+            display: inline;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 9px 13px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .activate-btn {
+            background: #198754;
+        }
+
+        .deactivate-btn {
+            background: #dc3545;
+        }
+
+        .protected {
+            color: #71877c;
+            font-size: 13px;
+        }
+
+        .mobile-users {
+            display: none;
+        }
+
+        .empty-message {
+            padding: 20px 0;
+            color: #71877c;
+        }
+
+        @media (max-width: 700px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 15px 18px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .logout {
+                margin-top: 0;
+            }
+
+            .main {
+                padding: 22px 16px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 20px 16px;
+            }
+
+            .stat-card h2 {
+                font-size: 28px;
+            }
+
+            .users-panel {
+                padding: 20px 16px;
+            }
+
+            .filter-form {
+                flex-direction: column;
+            }
+
+            .filter-form input,
+            .filter-form select,
+            .filter-form button,
+            .filter-form .reset {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .table-wrapper {
+                display: none;
+            }
+
+            .mobile-users {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .user-card {
+                border: 1px solid #e5eee8;
+                background: #fbfdfb;
+                border-radius: 16px;
+                padding: 17px;
+            }
+
+            .user-card h3 {
+                color: #18543f;
+                font-size: 19px;
+                margin-bottom: 14px;
+                overflow-wrap: anywhere;
+            }
+
+            .user-detail {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 10px 0;
+                border-bottom: 1px solid #edf1ed;
+                font-size: 14px;
+            }
+
+            .user-detail:last-child {
+                border-bottom: none;
+            }
+
+            .user-detail span:first-child {
+                color: #71877c;
+                flex-shrink: 0;
+            }
+
+            .user-detail strong {
+                text-align: right;
+                overflow-wrap: anywhere;
+            }
+
+            .mobile-action {
+                margin-top: 15px;
+                width: 100%;
+            }
+
+            .mobile-action button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <img src="{% static 'images/nourishnet-logo.png' %}"
+             class="logo" alt="NourishNet Logo">
+
+        <a href="{% url 'logout' %}" class="logout"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            Logout
+        </a>
+
+        <form id="logout-form" method="POST"
+              action="{% url 'logout' %}" style="display:none;">
+            {% csrf_token %}
+        </form>
+    </aside>
+
+    <main class="main">
+
+        <a href="{% url 'admin_dashboard' %}" class="back">
+            ← Back to Dashboard
+        </a>
+
+        <h1>Manage Users</h1>
+
+        <p class="subtitle">
+            View and manage all registered NourishNet accounts.
+        </p>
+
+        <div class="profile">
+            👤 {{ request.user.username }}
+        </div>
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Registered Users</p>
+                <h2>{{ total_users }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Donor Accounts</p>
+                <h2>{{ total_donors }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>NGO Accounts</p>
+                <h2>{{ total_ngos }}</h2>
+            </div>
+
+        </section>
+
+        <section class="users-panel">
+
+            <h2>Registered Users</h2>
+
+            <form method="GET" class="filter-form">
+
+                <input type="text"
+                       name="search"
+                       placeholder="Search username, name or email"
+                       value="{{ search }}">
+
+                <select name="role">
+                    <option value="">All Roles</option>
+
+                    <option value="DONOR"
+                        {% if selected_role == 'DONOR' %}selected{% endif %}>
+                        Donor
+                    </option>
+
+                    <option value="NGO"
+                        {% if selected_role == 'NGO' %}selected{% endif %}>
+                        NGO
+                    </option>
+
+                    <option value="ADMIN"
+                        {% if selected_role == 'ADMIN' %}selected{% endif %}>
+                        Admin
+                    </option>
+                </select>
+
+                <button type="submit">Search / Filter</button>
+
+                <a href="{% url 'admin_users' %}" class="reset">
+                    Reset
+                </a>
+
+            </form>
+
+            <!-- Desktop user table -->
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Date Joined</th>
+                            <th>Account Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for user in users %}
+
+                        <tr>
+                            <td><strong>{{ user.username }}</strong></td>
+
+                            <td>
+                                {{ user.get_full_name|default:"Not provided" }}
+                            </td>
+
+                            <td>
+                                {{ user.email|default:"Not provided" }}
+                            </td>
+
+                            <td>
+                                <span class="role">
+                                    {{ user.get_role_display }}
+                                </span>
+                            </td>
+
+                            <td>{{ user.date_joined|date:"d M Y" }}</td>
+
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="status">Active</span>
+                                {% else %}
+                                    <span class="status inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if not user.is_superuser and user.id != request.user.id %}
+
+                                    <form method="POST"
+                                          action="{% url 'toggle_user_status' user.id %}"
+                                          class="action-form">
+
+                                        {% csrf_token %}
+
+                                        {% if user.is_active %}
+                                            <button type="submit"
+                                                    class="action-btn deactivate-btn">
+                                                Deactivate
+                                            </button>
+                                        {% else %}
+                                            <button type="submit"
+                                                    class="action-btn activate-btn">
+                                                Activate
+                                            </button>
+                                        {% endif %}
+
+                                    </form>
+
+                                {% else %}
+                                    <span class="protected">Protected</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="7">No users found.</td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- Mobile user cards -->
+
+            <div class="mobile-users">
+
+                {% for user in users %}
+
+                <article class="user-card">
+
+                    <h3>{{ user.username }}</h3>
+
+                    <div class="user-detail">
+                        <span>Full Name</span>
+                        <strong>
+                            {{ user.get_full_name|default:"Not provided" }}
+                        </strong>
+                    </div>
+
+                    <div class="user-detail">
+                        <span>Email</span>
+                        <strong>
+                            {{ user.email|default:"Not provided" }}
+                        </strong>
+                    </div>
+
+                    <div class="user-detail">
+                        <span>Role</span>
+                        <strong>
+                            <span class="role">
+                                {{ user.get_role_display }}
+                            </span>
+                        </strong>
+                    </div>
+
+                    <div class="user-detail">
+                        <span>Date Joined</span>
+                        <strong>{{ user.date_joined|date:"d M Y" }}</strong>
+                    </div>
+
+                    <div class="user-detail">
+                        <span>Account Status</span>
+                        <strong>
+                            {% if user.is_active %}
+                                <span class="status">Active</span>
+                            {% else %}
+                                <span class="status inactive">Inactive</span>
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="mobile-action">
+
+                        {% if not user.is_superuser and user.id != request.user.id %}
+
+                            <form method="POST"
+                                  action="{% url 'toggle_user_status' user.id %}">
+
+                                {% csrf_token %}
+
+                                {% if user.is_active %}
+                                    <button type="submit"
+                                            class="action-btn deactivate-btn">
+                                        Deactivate Account
+                                    </button>
+                                {% else %}
+                                    <button type="submit"
+                                            class="action-btn activate-btn">
+                                        Activate Account
+                                    </button>
+                                {% endif %}
+
+                            </form>
+
+                        {% else %}
+                            <span class="protected">Protected Account</span>
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+                {% empty %}
+
+                    <p class="empty-message">No users found.</p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

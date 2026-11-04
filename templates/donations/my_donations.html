@@ -1,0 +1,327 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Donations | NourishNet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f8f3;
+            color: #244332;
+            padding: 35px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .back {
+            color: #247447;
+            text-decoration: none;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718075;
+        }
+
+        .add-btn {
+            background: #247447;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .add-btn:hover {
+            background: #195b36;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px #173b3010;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px 12px;
+            border-bottom: 1px solid #e8eee8;
+        }
+
+        th {
+            color: #718075;
+            font-size: 13px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            background: #e3f5e8;
+            color: #247346;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .view, .edit, .delete {
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 12px;
+            white-space: nowrap;
+        }
+
+        .view { color: #247447; }
+        .edit { color: #2876b8; }
+        .delete { color: #dc4545; }
+
+        .view:hover,
+        .edit:hover,
+        .delete:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 55px 15px;
+            color: #718075;
+        }
+
+        .empty a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #247447;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 600px) {
+            body {
+                padding: 18px;
+            }
+
+            .top {
+                align-items: flex-start;
+                flex-direction: column;
+                margin: 25px 0;
+            }
+
+            .top h1 {
+                font-size: 28px;
+            }
+
+            .add-btn {
+                display: inline-block;
+            }
+
+            .card {
+                padding: 15px;
+                overflow: visible;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            table, tbody {
+                display: block;
+                width: 100%;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tbody tr {
+                display: block;
+                background: white;
+                padding: 12px 16px;
+                margin-bottom: 16px;
+                border-radius: 14px;
+                box-shadow: 0 3px 15px #173b3010;
+            }
+
+            tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 12px 0;
+                border-bottom: 1px solid #edf2ed;
+                text-align: right;
+                overflow-wrap: anywhere;
+            }
+
+            tbody td::before {
+                content: attr(data-label);
+                color: #718075;
+                font-weight: bold;
+                text-align: left;
+                flex-shrink: 0;
+            }
+
+            tbody td:last-child {
+                border-bottom: none;
+                flex-wrap: wrap;
+            }
+
+            tbody td:last-child::before {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .view, .edit, .delete {
+                margin-right: 0;
+            }
+
+            .empty {
+                background: white;
+                border-radius: 14px;
+                padding: 40px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'donor_dashboard' %}" class="back">
+        ← Back to Dashboard
+    </a>
+
+    <div class="top">
+        <div>
+            <h1>My Donations</h1>
+            <p class="subtitle">
+                Track and manage your published food donations.
+            </p>
+        </div>
+
+        <a href="{% url 'create_donation' %}" class="add-btn">
+            + List a Donation
+        </a>
+    </div>
+
+    <div class="card">
+
+        {% if donations %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Food Name</th>
+                    <th>Food Type</th>
+                    <th>Quantity</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for donation in donations %}
+                <tr>
+                    <td data-label="Food Name">
+                        <strong>{{ donation.title }}</strong>
+                    </td>
+
+                    <td data-label="Food Type">
+                        {{ donation.get_food_type_display }}
+                    </td>
+
+                    <td data-label="Quantity">
+                        {{ donation.quantity }} {{ donation.get_unit_display }}
+                    </td>
+
+                    <td data-label="Expiry Date">
+                        {{ donation.use_by|date:"d M Y, h:i A" }}
+                    </td>
+
+                    <td data-label="Status">
+                        <span class="status">
+                            {{ donation.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td data-label="Actions">
+                        <div class="actions">
+                            <a class="view"
+                               href="{% url 'donation_detail' donation.id %}">
+                                View
+                            </a>
+
+                            {% if donation.status == 'AVAILABLE' %}
+                            <a class="edit"
+                               href="{% url 'update_donation' donation.id %}">
+                                Edit
+                            </a>
+
+                            <a class="delete"
+                               href="{% url 'delete_donation' donation.id %}">
+                                Delete
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            <h2>No donations yet</h2>
+            <p>You haven't published any food donations.</p>
+
+            <a href="{% url 'create_donation' %}">
+                Publish your first donation →
+            </a>
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>

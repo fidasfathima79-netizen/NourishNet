@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details | NourishNet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f8f5;
+            color: #29483c;
+            padding: 45px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .back {
+            display: inline-block;
+            color: #218257;
+            text-decoration: none;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 22px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7b9187;
+            margin-bottom: 30px;
+        }
+
+        .profile {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .field {
+            padding: 18px;
+            background: #f5faf7;
+            border-radius: 12px;
+        }
+
+        .field p {
+            color: #81958c;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .field h3 {
+            font-size: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .role {
+            color: #218257;
+        }
+
+        .status {
+            color: #168451;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .profile {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <a href="{% url 'admin_users' %}" class="back">
+        ← Back to Manage Users
+    </a>
+
+    <div class="card">
+        <h1>User Details</h1>
+        <p class="subtitle">
+            Complete account information of the registered user.
+        </p>
+
+        <div class="profile">
+
+            <div class="field">
+                <p>Username</p>
+                <h3>{{ selected_user.username }}</h3>
+            </div>
+
+            <div class="field">
+                <p>Full Name</p>
+                <h3>{{ selected_user.get_full_name|default:"Not provided" }}</h3>
+            </div>
+
+            <div class="field">
+                <p>Email Address</p>
+                <h3>{{ selected_user.email|default:"Not provided" }}</h3>
+            </div>
+
+            <div class="field">
+                <p>Role</p>
+                <h3 class="role">{{ selected_user.get_role_display }}</h3>
+            </div>
+
+            <div class="field">
+                <p>Date Joined</p>
+                <h3>{{ selected_user.date_joined|date:"d M Y, h:i A" }}</h3>
+            </div>
+
+            <div class="field">
+                <p>Account Status</p>
+                <h3 class="status">
+                    {% if selected_user.is_active %}
+                        Active
+                    {% else %}
+                        Inactive
+                    {% endif %}
+                </h3>
+            </div>
+
+            <div class="field">
+                <p>Last Login</p>
+                <h3>{{ selected_user.last_login|date:"d M Y, h:i A"|default:"Never logged in" }}</h3>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

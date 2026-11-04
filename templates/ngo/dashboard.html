@@ -1,0 +1,754 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Dashboard | NourishNet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f8f4;
+            color: #243b30;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 283px;
+            background: #174f38;
+            color: white;
+            padding: 30px 23px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 55px;
+        }
+
+        .brand img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 17px 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 17px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #28764f;
+        }
+
+        .logout-area {
+            margin-top: auto;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 13px;
+            background: transparent;
+            border: 1px solid #80a895;
+            border-radius: 9px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #28764f;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            margin-left: 283px;
+            width: calc(100% - 283px);
+            padding: 40px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 15px;
+        }
+
+        .topbar h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .welcome {
+            color: #71847a;
+            font-size: 17px;
+        }
+
+        .user-badge {
+            background: white;
+            padding: 17px 23px;
+            border-radius: 15px;
+            font-size: 17px;
+            white-space: nowrap;
+        }
+
+        /* STATISTICS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+            min-width: 0;
+        }
+
+        .stat-card p {
+            color: #71847a;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h2 {
+            color: #247447;
+            font-size: 35px;
+        }
+
+        /* DONATION SECTION */
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+            min-width: 0;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 12px;
+        }
+
+        .section-heading h2 {
+            font-size: 25px;
+        }
+
+        .section-heading span {
+            color: #71847a;
+            font-size: 14px;
+        }
+
+        /* DESKTOP TABLE */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th {
+            text-align: left;
+            padding: 17px 12px;
+            color: #71847a;
+            font-size: 14px;
+            border-bottom: 1px solid #e8eee9;
+        }
+
+        td {
+            padding: 19px 12px;
+            border-bottom: 1px solid #edf1ed;
+            font-size: 15px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* STATUS */
+        .status {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 25px;
+            font-size: 13px;
+            background: #e4f5e9;
+            color: #247447;
+            white-space: nowrap;
+        }
+
+        .status.reserved {
+            background: #fff2d9;
+            color: #a56b12;
+        }
+
+        .status.collected {
+            background: #e6edff;
+            color: #3459a5;
+        }
+
+        .status.expired {
+            background: #ffe6e6;
+            color: #b43b3b;
+        }
+
+        .reserve-btn {
+            background: #247447;
+            color: white;
+            border: none;
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .reserve-btn:hover {
+            background: #185a36;
+        }
+
+        .disabled-text {
+            color: #929c95;
+            font-size: 13px;
+        }
+
+        /* MOBILE DONATION CARDS */
+        .mobile-donations {
+            display: none;
+        }
+
+        .donation-card {
+            border: 1px solid #e5eee7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: #fcfefc;
+        }
+
+        .donation-card h3 {
+            color: #17513b;
+            font-size: 19px;
+            margin-bottom: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .donation-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf1ed;
+            font-size: 14px;
+        }
+
+        .donation-info:last-of-type {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #71847a;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            text-align: right;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+            min-width: 0;
+        }
+
+        .mobile-action {
+            margin-top: 18px;
+        }
+
+        .mobile-action form {
+            width: 100%;
+        }
+
+        .mobile-action .reserve-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        /* EMPTY STATE */
+        .empty {
+            text-align: center;
+            padding: 45px 15px;
+            color: #71847a;
+        }
+
+        .empty h3 {
+            color: #294b38;
+            margin-bottom: 10px;
+        }
+
+        /* MESSAGES */
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 13px 17px;
+            border-radius: 9px;
+            margin-bottom: 10px;
+            background: #e4f5e9;
+            color: #247447;
+        }
+
+        .message.error {
+            background: #ffe6e6;
+            color: #b43b3b;
+        }
+
+        /* TABLET */
+        @media (max-width: 1000px) {
+            .main {
+                padding: 25px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* MOBILE */
+        @media (max-width: 700px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 16px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .brand {
+                width: 100%;
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+
+            .brand img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .nav-link {
+                display: inline-block;
+                padding: 11px 13px;
+                margin: 0;
+                font-size: 14px;
+            }
+
+            .logout-area {
+                margin-top: 0;
+                margin-left: auto;
+            }
+
+            .logout-btn {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 22px 16px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+                margin-bottom: 25px;
+            }
+
+            .topbar h1 {
+                font-size: 27px;
+            }
+
+            .welcome {
+                font-size: 15px;
+            }
+
+            .user-badge {
+                padding: 12px 17px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 13px;
+                margin-bottom: 22px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-card p {
+                font-size: 14px;
+            }
+
+            .stat-card h2 {
+                font-size: 29px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .section-heading h2 {
+                font-size: 21px;
+            }
+
+            .table-wrapper {
+                display: none;
+            }
+
+            .mobile-donations {
+                display: block;
+            }
+        }
+
+        /* SMALL PHONES */
+        @media (max-width: 380px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-link {
+                font-size: 13px;
+                padding: 10px;
+            }
+
+            .main {
+                padding: 18px 12px;
+            }
+
+            .donation-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <img src="{% static 'images/nourishnet-logo.png' %}"
+                 alt="NourishNet Logo">
+            <span>NourishNet</span>
+        </div>
+
+        <a href="{% url 'ngo_dashboard' %}"
+           class="nav-link active">
+            🏠 Dashboard
+        </a>
+
+        <a href="#donations" class="nav-link">
+            🍱 Available Donations
+        </a>
+
+        <a href="{% url 'ngo_my_reservations' %}" class="nav-link">
+            📋 My Reservations
+        </a>
+
+        <div class="logout-area">
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>NGO Dashboard</h1>
+                <p class="welcome">
+                    Welcome, {{ request.user.first_name|default:request.user.username }}!
+                </p>
+            </div>
+
+            <div class="user-badge">
+                🤝 {{ request.user.username }}
+            </div>
+        </div>
+
+        <!-- MESSAGES -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags == 'error' %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- STATISTICS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Available Donations</p>
+                <h2>{{ available_donations }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Total Donations</p>
+                <h2>{{ total_donations }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Food Distribution</p>
+                <h2>{{ food_distribution }}</h2>
+            </div>
+
+        </section>
+
+        <!-- DONATIONS -->
+        <section class="section" id="donations">
+
+            <div class="section-heading">
+                <h2>Recent Food Donations</h2>
+                <span>Explore food shared by donors</span>
+            </div>
+
+            <!-- SEARCH & FILTER -->
+            <form method="GET" action="{% url 'ngo_dashboard' %}#donations"
+                  style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                <input type="text" name="q" value="{{ search_query }}"
+                       placeholder="Search food, location or donor"
+                       style="flex:1 1 220px; padding:11px 14px; border:1px solid #cfdcd3; border-radius:9px; font-size:15px;">
+                <select name="food_type"
+                        style="flex:0 1 200px; padding:11px 14px; border:1px solid #cfdcd3; border-radius:9px; font-size:15px;">
+                    <option value="">All food types</option>
+                    {% for value, label in food_type_choices %}
+                    <option value="{{ value }}" {% if value == selected_food_type %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit"
+                        style="padding:11px 22px; background:#174f38; color:#fff; border:none; border-radius:9px; font-size:15px; cursor:pointer;">
+                    Search
+                </button>
+                {% if search_query or selected_food_type %}
+                <a href="{% url 'ngo_dashboard' %}#donations"
+                   style="padding:11px 16px; color:#174f38; text-decoration:none; align-self:center;">Clear</a>
+                {% endif %}
+            </form>
+
+            {% if donations %}
+
+            <!-- DESKTOP TABLE -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Food Name</th>
+                            <th>Food Type</th>
+                            <th>Quantity</th>
+                            <th>Collection Location</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for donation in donations %}
+                        <tr>
+                            <td>
+                                <strong>{{ donation.title }}</strong>
+                            </td>
+
+                            <td>
+                                {{ donation.get_food_type_display }}
+                            </td>
+
+                            <td>
+                                {{ donation.quantity }}
+                                {{ donation.get_unit_display }}
+                            </td>
+
+                            <td>
+                                {{ donation.collection_location }}
+                            </td>
+
+                            <td>
+                                <span class="status
+                                    {% if donation.status == 'RESERVED' %}reserved
+                                    {% elif donation.status == 'COLLECTED' %}collected
+                                    {% elif donation.status == 'EXPIRED' %}expired
+                                    {% endif %}">
+                                    {{ donation.get_status_display }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if donation.status == 'AVAILABLE' %}
+                                    <form method="POST"
+                                          action="{% url 'reserve_donation' donation.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="reserve-btn">
+                                            Reserve
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="disabled-text">
+                                        Not available
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MOBILE DONATION CARDS -->
+            <div class="mobile-donations">
+
+                {% for donation in donations %}
+
+                <div class="donation-card">
+
+                    <h3>{{ donation.title }}</h3>
+
+                    <div class="donation-info">
+                        <span class="info-label">Food Type</span>
+                        <span class="info-value">
+                            {{ donation.get_food_type_display }}
+                        </span>
+                    </div>
+
+                    <div class="donation-info">
+                        <span class="info-label">Quantity</span>
+                        <span class="info-value">
+                            {{ donation.quantity }}
+                            {{ donation.get_unit_display }}
+                        </span>
+                    </div>
+
+                    <div class="donation-info">
+                        <span class="info-label">Location</span>
+                        <span class="info-value">
+                            {{ donation.collection_location }}
+                        </span>
+                    </div>
+
+                    <div class="donation-info">
+                        <span class="info-label">Status</span>
+                        <span class="info-value">
+                            <span class="status
+                                {% if donation.status == 'RESERVED' %}reserved
+                                {% elif donation.status == 'COLLECTED' %}collected
+                                {% elif donation.status == 'EXPIRED' %}expired
+                                {% endif %}">
+                                {{ donation.get_status_display }}
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="mobile-action">
+                        {% if donation.status == 'AVAILABLE' %}
+                            <form method="POST"
+                                  action="{% url 'reserve_donation' donation.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="reserve-btn">
+                                    Reserve Donation
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="disabled-text">
+                                This donation is not available for reservation.
+                            </span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="empty">
+                <h3>No Food Donations Available</h3>
+                <p>
+                    There are currently no food donations to display.
+                    Please check again later.
+                </p>
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Donation | NourishNet</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: #f2f8f5;
+            font-family: Arial, sans-serif;
+            color: #294438;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+        }
+
+        h1 {
+            color: #18543e;
+        }
+
+        p {
+            color: #71877c;
+        }
+
+        form p {
+            margin-bottom: 18px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #dce8e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        button {
+            background: #23764e;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #23764e;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a href="{% url 'my_donations' %}" class="back">
+        ← Back to My Donations
+    </a>
+
+    <h1>Edit Food Donation</h1>
+    <p>Update your food donation information.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Donation | NourishNet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f7f3;
+            color: #244332;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 5px 25px #173b3012;
+        }
+
+        .warning {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #718075;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .food-name {
+            color: #244332;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        button, .cancel {
+            border: none;
+            padding: 13px 22px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button {
+            background: #dc4545;
+            color: white;
+        }
+
+        .cancel {
+            background: #eaf3ed;
+            color: #247447;
+        }
+
+        button:hover {
+            background: #bd3030;
+        }
+
+        @media(max-width: 450px) {
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="warning">⚠️</div>
+
+        <h1>Delete Donation?</h1>
+
+        <p>
+            Are you sure you want to delete
+            <span class="food-name">{{ donation.title }}</span>?
+            This action cannot be undone.
+        </p>
+
+        <div class="actions">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit">Yes, Delete</button>
+            </form>
+
+            <a href="{% url 'my_donations' %}" class="cancel">
+                Cancel
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

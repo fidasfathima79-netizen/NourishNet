@@ -1,0 +1,526 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations | NourishNet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f8f5;
+            color: #263f33;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #17513b;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 30px 22px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 55px;
+        }
+
+        .brand img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 17px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #287c55;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #78a18d;
+            border-radius: 10px;
+            background: transparent;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .logout button:hover {
+            background: #287c55;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 260px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #287c55;
+            text-decoration: none;
+            margin-bottom: 22px;
+            font-size: 16px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #71847a;
+            font-size: 17px;
+        }
+
+        .user {
+            background: white;
+            padding: 15px 22px;
+            border-radius: 15px;
+            font-size: 17px;
+            white-space: nowrap;
+        }
+
+        /* Summary */
+        .summary {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+        }
+
+        .summary p {
+            color: #71847a;
+            font-size: 16px;
+        }
+
+        .summary h2 {
+            color: #287c55;
+            font-size: 36px;
+            margin-top: 10px;
+        }
+
+        /* Reservation section */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+        }
+
+        .card-heading {
+            margin-bottom: 25px;
+        }
+
+        .card-heading h2 {
+            font-size: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 17px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf1ee;
+            font-size: 15px;
+        }
+
+        th {
+            color: #71847a;
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 25px;
+            background: #e3f5e9;
+            color: #217447;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        /* Mobile reservation cards */
+        .mobile-reservations {
+            display: none;
+        }
+
+        .reservation-item {
+            border: 1px solid #e6eee8;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: #fcfefc;
+        }
+
+        .reservation-item h3 {
+            color: #17513b;
+            font-size: 19px;
+            margin-bottom: 16px;
+        }
+
+        .detail {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf1ee;
+            font-size: 14px;
+        }
+
+        .detail:last-child {
+            border-bottom: none;
+        }
+
+        .detail span:first-child {
+            color: #71847a;
+            flex-shrink: 0;
+        }
+
+        .detail strong {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 55px 20px;
+        }
+
+        .empty h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .empty p {
+            color: #71847a;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Tablet */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 220px;
+                padding: 25px 15px;
+            }
+
+            .main {
+                margin-left: 220px;
+                padding: 25px;
+            }
+
+            .brand {
+                font-size: 22px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 15px;
+                display: block;
+            }
+
+            .brand {
+                margin-bottom: 15px;
+                font-size: 23px;
+            }
+
+            .brand img {
+                width: 42px;
+                height: 42px;
+            }
+
+            .nav-menu {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .nav-link {
+                padding: 11px 12px;
+                margin: 0;
+                font-size: 14px;
+            }
+
+            .logout {
+                margin-top: 12px;
+            }
+
+            .logout button {
+                padding: 10px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+                line-height: 1.5;
+            }
+
+            .user {
+                padding: 12px 18px;
+            }
+
+            .summary {
+                padding: 22px;
+            }
+
+            .card {
+                padding: 20px 15px;
+            }
+
+            .card-heading h2 {
+                font-size: 21px;
+            }
+
+            .desktop-table {
+                display: none;
+            }
+
+            .mobile-reservations {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <img src="{% static 'images/nourishnet-logo.png' %}" alt="NourishNet">
+        <span>NourishNet</span>
+    </div>
+
+    <nav class="nav-menu">
+        <a href="{% url 'ngo_dashboard' %}" class="nav-link">
+            🏠 Dashboard
+        </a>
+
+        <a href="{% url 'ngo_dashboard' %}#donations" class="nav-link">
+            🍱 Available Donations
+        </a>
+
+        <a href="{% url 'ngo_my_reservations' %}" class="nav-link active">
+            📋 My Reservations
+        </a>
+    </nav>
+
+    <form method="POST" action="{% url 'logout' %}" class="logout">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+</aside>
+
+<main class="main">
+
+    <a href="{% url 'ngo_dashboard' %}" class="back-link">
+        ← Back to Dashboard
+    </a>
+
+    <div class="topbar">
+        <div>
+            <h1>My Reservations</h1>
+            <p class="subtitle">
+                Track the food donations you have reserved.
+            </p>
+        </div>
+
+        <div class="user">
+            🤝 {{ request.user.first_name|default:request.user.username }}
+        </div>
+    </div>
+
+    <div class="summary">
+        <p>Total Reservations</p>
+        <h2>{{ total_reservations }}</h2>
+    </div>
+
+    <section class="card">
+
+        <div class="card-heading">
+            <h2>Reserved Food Donations</h2>
+        </div>
+
+        {% if reservations %}
+
+        <!-- Desktop table -->
+        <div class="desktop-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food Name</th>
+                        <th>Food Type</th>
+                        <th>Quantity</th>
+                        <th>Donor</th>
+                        <th>Collection Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td>
+                            <strong>{{ reservation.donation.title }}</strong>
+                        </td>
+
+                        <td>
+                            {{ reservation.donation.get_food_type_display }}
+                        </td>
+
+                        <td>
+                            {{ reservation.donation.quantity }}
+                            {{ reservation.donation.get_unit_display }}
+                        </td>
+
+                        <td>
+                            {{ reservation.donation.donor.first_name|default:reservation.donation.donor.username }}
+                        </td>
+
+                        <td>
+                            {{ reservation.donation.collection_location }}
+                        </td>
+
+                        <td>
+                            <span class="status">
+                                {{ reservation.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile cards -->
+        <div class="mobile-reservations">
+            {% for reservation in reservations %}
+            <div class="reservation-item">
+
+                <h3>{{ reservation.donation.title }}</h3>
+
+                <div class="detail">
+                    <span>Food Type</span>
+                    <strong>{{ reservation.donation.get_food_type_display }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Quantity</span>
+                    <strong>
+                        {{ reservation.donation.quantity }}
+                        {{ reservation.donation.get_unit_display }}
+                    </strong>
+                </div>
+
+                <div class="detail">
+                    <span>Donor</span>
+                    <strong>
+                        {{ reservation.donation.donor.first_name|default:reservation.donation.donor.username }}
+                    </strong>
+                </div>
+
+                <div class="detail">
+                    <span>Location</span>
+                    <strong>{{ reservation.donation.collection_location }}</strong>
+                </div>
+
+                <div class="detail">
+                    <span>Status</span>
+                    <strong>
+                        <span class="status">
+                            {{ reservation.get_status_display }}
+                        </span>
+                    </strong>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            <h3>No Reservations Yet</h3>
+            <p>
+                You haven't reserved any food donations yet.
+                Explore available donations and help your community!
+            </p>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

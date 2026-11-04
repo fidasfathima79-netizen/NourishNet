@@ -1,0 +1,100 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | NourishNet</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-container">
+
+    <div class="auth-left">
+
+        <a href="{% url 'home' %}" class="brand">
+            <img src="{% static 'images/nourishnet-logo.png' %}" alt="Logo">
+            <span>Nourish<span class="green">Net</span></span>
+        </a>
+
+        <div class="auth-message">
+            <h1>Be part of something good.</h1>
+            <p>
+                Join our community of food donors and
+                organizations working together to reduce
+                food waste and fight hunger.
+            </p>
+        </div>
+
+        <div class="auth-decoration">
+            Every donation creates a difference.
+        </div>
+
+    </div>
+
+    <div class="auth-right">
+
+        <div class="auth-form">
+
+            <h2>Create your account</h2>
+
+            <p class="auth-subtitle">
+                Join NourishNet and start making an impact.
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                {% for field in form %}
+
+                    <label>{{ field.label }}</label>
+
+                    {{ field }}
+
+                    {% for error in field.errors %}
+                        <small class="field-error">
+                            {{ error }}
+                        </small>
+                    {% endfor %}
+
+                {% endfor %}
+
+                <button type="submit" class="auth-submit">
+                    Create Account →
+                </button>
+
+            </form>
+
+            <p class="auth-bottom">
+                Already registered?
+                <a href="{% url 'login' %}">Login here</a>
+            </p>
+
+            <a href="{% url 'home' %}" class="back-home">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

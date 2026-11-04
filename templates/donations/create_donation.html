@@ -1,0 +1,263 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List a Donation | NourishNet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f8f3;
+            color: #244332;
+            padding: 35px 15px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header a {
+            color: #28764f;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            margin-top: 20px;
+            font-size: 30px;
+        }
+
+        .header p {
+            color: #718075;
+            margin-top: 10px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px #173b3010;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            font-size: 19px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8eee8;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce5dc;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #28764f;
+        }
+
+        .errorlist {
+            color: #c0392b;
+            font-size: 13px;
+            list-style: none;
+            margin-top: 6px;
+        }
+
+        .form-errors {
+            color: #b42318;
+            background: #fff0ee;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .cancel {
+            border: 1px solid #cbd8cd;
+            color: #45604e;
+            background: white;
+        }
+
+        .submit {
+            border: none;
+            background: #247447;
+            color: white;
+            font-weight: bold;
+        }
+
+        .submit:hover {
+            background: #185b35;
+        }
+
+        @media(max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <a href="{% url 'donor_dashboard' %}">
+            ← Back to Dashboard
+        </a>
+
+        <h1>List a Food Donation</h1>
+        <p>Share surplus food and help someone in your community.</p>
+    </div>
+
+    <div class="form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-section">
+                <h2>🍱 Food Information</h2>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'title' or field.name == 'food_type' or field.name == 'quantity' or field.name == 'unit' or field.name == 'dietary_suitability' %}
+                            <div class="field">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% for field in form %}
+                    {% if field.name == 'description' or field.name == 'allergens' or field.name == 'food_image' %}
+                        <div class="field">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="form-section">
+                <h2>📅 Expiry & Collection Details</h2>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'use_by' or field.name == 'collection_start' or field.name == 'collection_end' %}
+                            <div class="field">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% for field in form %}
+                    {% if field.name == 'collection_location' or field.name == 'contact_person' or field.name == 'contact_phone' or field.name == 'collection_instructions' %}
+                        <div class="field">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="buttons">
+                <a href="{% url 'donor_dashboard' %}" class="btn cancel">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn submit">
+                    Publish Donation →
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
+
